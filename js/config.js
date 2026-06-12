@@ -47,7 +47,9 @@ export const OM_TILES = {
   // panel still reports wind for the pinned spot.)
   variables: {
     cloud_cover: { label: 'Cloud cover', unit: '%' },
-    precipitation: { label: 'Precipitation', unit: 'mm' },
+    // precipitation is a backward-sum — absent at the analysis hour, so request
+    // the step valid now rather than `latest` (which is the t=0 analysis).
+    precipitation: { label: 'Precipitation', unit: 'mm', time: 'current_time' },
     temperature_2m: { label: 'Temperature 2 m', unit: '°C' },
   },
 };

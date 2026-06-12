@@ -27,3 +27,4 @@ build/
 
 # Netlify
 .netlify/
+/CLAUDE.md
