@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="color-scheme" content="dark" />
+  <title>OnlyStars — Dnipro meteo explorer</title>
+
+  <link rel="preconnect" href="https://unpkg.com" />
+  <link rel="preconnect" href="https://api.open-meteo.com" />
+  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="css/style.css" rel="stylesheet" />
+</head>
+<body>
+  <header id="topbar">
+    <div class="brand">
+      <span class="logo">◐</span>
+      <span class="brand-name">OnlyStars</span>
+      <span class="brand-sub">Dnipro meteo explorer</span>
+    </div>
+    <div class="top-actions">
+      <button id="btn-locate" class="top-btn" title="Use my location">⌖ Locate</button>
+      <button id="btn-night" class="top-btn" title="Night-vision mode (preserves dark adaptation)">night vision</button>
+      <button id="btn-panel" class="top-btn only-mobile" title="Toggle readout">readout</button>
+    </div>
+  </header>
+
+  <aside id="controls">
+    <div class="eyebrow">Layers</div>
+    <div id="layers"></div>
+    <p class="controls-note">
+      Tap the map to drop a pin and read the forecast for that point.
+      Radar has <strong>no live coverage over Ukraine</strong> during the war —
+      lead with Satellite IR and the model field.
+    </p>
+  </aside>
+
+  <main id="map"></main>
+
+  <section id="panel" aria-live="polite"></section>
+
+  <div id="lightning-embed-wrap"></div>
+
+  <!-- Dependencies (UMD globals): MapLibre, SunCalc. Open-Meteo's map layer is
+       loaded at runtime with graceful fallback, so a CDN change can't break the app. -->
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

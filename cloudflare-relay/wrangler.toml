@@ -1,0 +1,14 @@
+name = "onlystars-lightning"
+main = "worker.js"
+compatibility_date = "2026-04-07"
+
+# Bind the Durable Object class.
+[[durable_objects.bindings]]
+name = "RELAY"
+class_name = "LightningRelay"
+
+# Free plan requires SQLite-backed Durable Objects (we don't use storage, but
+# the class must still be declared this way to deploy on the free tier).
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["LightningRelay"]

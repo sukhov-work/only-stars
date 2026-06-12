@@ -1,0 +1,11 @@
+{
+  "name": "onlystarts-lightning-cf",
+  "version": "1.0.0",
+  "description": "OnlyStars Blitzortung lightning relay on Cloudflare Workers + Durable Objects (non-commercial).",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": { "wrangler": "^4.0.0" }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "onlystars-lightning-relay",
+  "version": "1.0.0",
+  "description": "Policy-compliant Blitzortung lightning relay for the OnlyStars explorer (non-commercial).",
+  "private": true,
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "dependencies": { "ws": "^8.18.0" }
+}
