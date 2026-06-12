@@ -74,11 +74,7 @@ export function setOpenMeteoLayer(map, on, variable) {
   if (map.getLayer(id)) { map.removeLayer(id); }
   if (map.getSource(sid)) { map.removeSource(sid); }
   if (!on || !map._omRegistered) return;
-  // Backward-accumulated variables (precipitation, radiation) are omitted from
-  // the model's first timestep, so `latest.json` (the analysis hour) has no data
-  // for them. Such variables request `current_time` instead — the step valid now.
-  const meta = (OM_TILES.variables[variable] && OM_TILES.variables[variable].time) || 'latest';
-  const omUrl = `${OM_TILES.base}/${OM_TILES.model}/${meta}.json?variable=${variable}`;
+  const omUrl = `${OM_TILES.base}/${OM_TILES.model}/latest.json?variable=${variable}`;
   try {
     map.addSource(sid, { type: 'raster', url: 'om://' + omUrl, maxzoom: OM_TILES.maxzoom || 7 });
     map.addLayer({ id, type: 'raster', source: sid, paint: { 'raster-opacity': 0.7 } });

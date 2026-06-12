@@ -44,7 +44,7 @@ map.on('load', async () => {
 
 // ---------- layer control panel ----------
 const LAYERS = [
-  { id: 'om', label: 'Open-Meteo field', kind: 'om', hint: 'ICON model overlay (cloud/precip/temp)' },
+  { id: 'om', label: 'Open-Meteo field', kind: 'om', hint: 'ICON model overlay (cloud / temp)' },
   { id: 'radar', label: 'Radar + nowcast', kind: 'radar', hint: 'No live UA radar — EU context only' },
   { id: 'gibs', label: 'True colour (daily)', kind: 'gibs', hint: 'NASA VIIRS, daytime cloud field' },
   { id: 'eumetsat', label: 'EUMETSAT Meteosat', kind: 'eumetsat', hint: 'Near-real-time satellite' },

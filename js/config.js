@@ -41,15 +41,14 @@ export const OM_TILES = {
     'https://unpkg.com/@openmeteo/weather-map-layer@0.0.19/dist/index.js',
     'https://cdn.jsdelivr.net/npm/@openmeteo/weather-map-layer@0.0.19/dist/index.js',
   ],
-  // Only variables the renderer has colour scales for AND that exist in the
-  // spatial dataset. (Wind is published as u/v components only — no
-  // wind_speed_10m raster — so it's intentionally omitted here; the point
-  // panel still reports wind for the pinned spot.)
+  // Only variables the renderer has colour scales for AND that the beta tiles
+  // expose at the analysis hour (t=0). Precipitation is intentionally excluded:
+  // it's a backward-sum with no t=0 timestep, and the published tile layer can't
+  // select a forecast step via the source URL. Precip lives in the point panel
+  // (exact mm + probability) and the 12 h strip; the radar layer is the map proxy.
+  // Wind is published only as u/v components (no wind_speed_10m raster).
   variables: {
     cloud_cover: { label: 'Cloud cover', unit: '%' },
-    // precipitation is a backward-sum — absent at the analysis hour, so request
-    // the step valid now rather than `latest` (which is the t=0 analysis).
-    precipitation: { label: 'Precipitation', unit: 'mm', time: 'current_time' },
     temperature_2m: { label: 'Temperature 2 m', unit: '°C' },
   },
 };
