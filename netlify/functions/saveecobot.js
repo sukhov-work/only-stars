@@ -50,7 +50,7 @@ exports.handler = async (event) => {
 
   try {
     if (!cache.stations || Date.now() - cache.at > TTL) {
-      const res = await fetch(SRC, { headers: { 'User-Agent': 'onlystars-explorer/1.0' } });
+      const res = await fetch(SRC, { headers: { 'User-Agent': 'skywatch-explorer/1.0' } });
       if (!res.ok) throw new Error(`SaveEcoBot ${res.status}`);
       cache = { at: Date.now(), stations: readStations(await res.json()) };
     }

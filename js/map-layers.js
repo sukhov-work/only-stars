@@ -76,7 +76,7 @@ export function setOpenMeteoLayer(map, on, variable) {
   if (!on || !map._omRegistered) return;
   const omUrl = `${OM_TILES.base}/${OM_TILES.model}/latest.json?variable=${variable}`;
   try {
-    map.addSource(sid, { type: 'raster', url: 'om://' + omUrl, maxzoom: 12 });
+    map.addSource(sid, { type: 'raster', url: 'om://' + omUrl, maxzoom: OM_TILES.maxzoom || 7 });
     map.addLayer({ id, type: 'raster', source: sid, paint: { 'raster-opacity': 0.7 } });
   } catch (e) {
     console.warn('[OM tiles] add failed:', e.message);

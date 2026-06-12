@@ -4,7 +4,20 @@ Runs the live-lightning relay entirely on Cloudflare's free tier. No always-on
 machine of your own. This is the **recommended** path for integrated strike
 markers on the map.
 
-## How it works
+## What this Worker serves
+
+One Worker, three jobs — so a GitHub Pages site (no serverless functions of its
+own) has everything it needs:
+
+- **WebSocket upgrade on any path** → live lightning relay (the Durable Object).
+- **`GET /seventimer?lat&lon`** → 7Timer ASTRO seeing/transparency (proxied; the
+  source is http-only with no CORS).
+- **`GET /saveecobot?lat&lon`** → nearest SaveEcoBot air-quality station.
+
+In the app, `js/config.js` points `WORKER_ORIGIN` at this Worker; `PROXY.base`
+and `LIGHTNING.relayUrl` are both derived from it.
+
+## How the lightning relay works
 
 A single, globally-unique **Durable Object** holds **one** upstream WebSocket to
 Blitzortung (this is what their data policy requires — everyone shares that one
@@ -29,7 +42,7 @@ npx wrangler deploy
 `wrangler deploy` prints a URL like:
 
 ```
-https://onlystars-lightning.<your-subdomain>.workers.dev
+https://skywatch-lightning.<your-subdomain>.workers.dev
 ```
 
 ## Wire it to the app
@@ -39,7 +52,7 @@ In `js/config.js`, set the relay URL to that host with a `/ws` path and the
 
 ```js
 export const LIGHTNING = {
-  relayUrl: 'wss://onlystars-lightning.<your-subdomain>.workers.dev/ws',
+  relayUrl: 'wss://skywatch-lightning.<your-subdomain>.workers.dev/ws',
   ...
 };
 ```

@@ -83,6 +83,20 @@ a { color: var(--go); }
 .controls-note { font-size: 10.5px; color: var(--muted); line-height: 1.4; margin: 10px 0 0; }
 .controls-note strong { color: var(--bad); font-weight: 500; }
 
+/* Open-Meteo legend */
+.om-legend { padding: 2px 0 6px 24px; }
+.om-legend-title { font-family: var(--mono); font-size: 10px; color: var(--ink); margin-bottom: 4px; }
+.om-legend-bar {
+  display: flex; height: 10px; border-radius: 3px; overflow: hidden; border: 1px solid var(--line);
+}
+.om-legend-bar i { flex: 1 1 0; }
+.om-legend-ticks { position: relative; height: 13px; margin-top: 3px; }
+.om-legend-ticks span {
+  position: absolute; transform: translateX(-50%); white-space: nowrap;
+  font-family: var(--mono); font-size: 9px; color: var(--muted);
+}
+.om-legend-note { font-size: 8.5px; color: var(--muted); margin-top: 2px; opacity: .8; }
+
 /* ---------- readout panel ---------- */
 #panel {
   position: absolute; z-index: 18; top: 52px; right: 0; bottom: 0; width: 340px;

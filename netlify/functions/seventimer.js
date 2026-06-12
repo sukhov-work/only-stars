@@ -21,7 +21,7 @@ exports.handler = async (event) => {
     `&lat=${encodeURIComponent(lat)}&product=astro&output=json&unit=metric`;
 
   try {
-    const res = await fetch(url, { headers: { 'User-Agent': 'onlystars-explorer/1.0' } });
+    const res = await fetch(url, { headers: { 'User-Agent': 'skywatch-explorer/1.0' } });
     if (!res.ok) throw new Error(`7Timer ${res.status}`);
     const text = await res.text();
     // 7Timer occasionally wraps JSON oddly; trim to the outermost object.

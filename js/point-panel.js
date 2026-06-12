@@ -1,5 +1,5 @@
 // point-panel.js — the draggable pin and everything in the readout panel.
-import { OPEN_METEO, SWPC, PROXY } from './config.js';
+import { OPEN_METEO, SWPC, proxyEndpoint } from './config.js';
 import { $, el, getJSON, num, compass, timeFromDate, haversineKm } from './util.js';
 
 const WMO = {
@@ -211,7 +211,7 @@ export class PointPanel {
 
   async _renderSeeing(lat, lng) {
     try {
-      const j = await getJSON(`${PROXY.sevenTimer}?lat=${lat.toFixed(3)}&lon=${lng.toFixed(3)}`);
+      const j = await getJSON(`${proxyEndpoint('seventimer')}?lat=${lat.toFixed(3)}&lon=${lng.toFixed(3)}`);
       const series = (j.dataseries || []).slice(0, 8); // ~24 h at 3 h steps
       const seeingLbl = ['','<0.5"','0.5-0.75"','0.75-1"','1-1.25"','1.25-1.5"','1.5-2"','2-2.5"','>2.5"'];
       const transLbl = ['','<0.3','0.3-0.4','0.4-0.5','0.5-0.6','0.6-0.7','0.7-0.85','0.85-1','>1'];
@@ -258,7 +258,7 @@ export class PointPanel {
     const box = $('#pp-air');
     box.innerHTML = `<div class="eyebrow">Air quality</div><p class="loading">Finding nearest station…</p>`;
     try {
-      const j = await getJSON(`${PROXY.airQuality}?lat=${lat.toFixed(3)}&lon=${lng.toFixed(3)}`);
+      const j = await getJSON(`${proxyEndpoint('saveecobot')}?lat=${lat.toFixed(3)}&lon=${lng.toFixed(3)}`);
       if (!j || !j.station) { box.innerHTML = `<div class="eyebrow">Air quality</div><p class="hint">No nearby station.</p>`; return; }
       const dist = haversineKm(lat, lng, j.lat, j.lon);
       box.innerHTML =

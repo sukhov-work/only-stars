@@ -7,6 +7,7 @@ import {
 } from './map-layers.js';
 import { PointPanel } from './point-panel.js';
 import { LightningRelay } from './lightning-relay.js';
+import { omLegendHTML } from './om-legend.js';
 
 const state = loadState();
 
@@ -43,18 +44,18 @@ map.on('load', async () => {
 
 // ---------- layer control panel ----------
 const LAYERS = [
-  { id: 'om', label: 'Open-Meteo field', kind: 'om', hint: 'ICON model overlay (beta)' },
-  { id: 'sat', label: 'Satellite IR', kind: 'sat', hint: 'RainViewer infrared — reliable over UA' },
+  { id: 'om', label: 'Open-Meteo field', kind: 'om', hint: 'ICON model overlay (cloud/precip/temp)' },
   { id: 'radar', label: 'Radar + nowcast', kind: 'radar', hint: 'No live UA radar — EU context only' },
   { id: 'gibs', label: 'True colour (daily)', kind: 'gibs', hint: 'NASA VIIRS, daytime cloud field' },
-  { id: 'eumetsat', label: 'EUMETSAT Meteosat', kind: 'eumetsat', hint: 'Optional WMS (layer may need swap)' },
-  { id: 'lightning', label: 'Lightning', kind: 'lightning', hint: 'Live strikes (embed or relay)' },
+  { id: 'eumetsat', label: 'EUMETSAT Meteosat', kind: 'eumetsat', hint: 'Near-real-time satellite' },
+  { id: 'lightning', label: 'Lightning', kind: 'lightning', hint: 'Live strikes (relay or embed)' },
 ];
 
 function buildControls() {
   const wrap = $('#layers');
   wrap.innerHTML = '';
-  state.layers = state.layers || { sat: true };
+  state.layers = state.layers || { om: true };
+  state.omVar = state.omVar || 'cloud_cover';
 
   for (const L of LAYERS) {
     const checked = !!state.layers[L.id];
@@ -69,11 +70,12 @@ function buildControls() {
     if (L.id === 'om') {
       const sel = el('select', { class: 'om-var', onchange: (e) => {
         state.omVar = e.target.value; saveState();
-        if (state.layers.om) setOpenMeteoLayer(map, true, state.omVar);
+        if (state.layers.om) { setOpenMeteoLayer(map, true, state.omVar); updateOmLegend(); }
       } },
         Object.entries(OM_TILES.variables).map(([v, m]) =>
           el('option', { value: v, ...(state.omVar === v ? { selected: 'selected' } : {}) }, m.label)));
       wrap.appendChild(el('div', { class: 'om-var-wrap' }, [sel]));
+      wrap.appendChild(el('div', { class: 'om-legend', id: 'om-legend' }));
     }
     if (L.id === 'radar') {
       const ctrls = el('div', { class: 'radar-ctrls', id: 'radar-ctrls' }, [
@@ -102,11 +104,18 @@ function applyInitialLayers() {
   for (const L of LAYERS) if (state.layers[L.id]) toggleLayer(L, true);
 }
 
+function updateOmLegend() {
+  const box = $('#om-legend');
+  if (!box) return;
+  const on = !!state.layers.om;
+  box.innerHTML = on ? omLegendHTML(state.omVar || 'cloud_cover') : '';
+  box.style.display = on ? 'block' : 'none';
+}
+
 function toggleLayer(L, on) {
   state.layers[L.id] = on; saveState();
   switch (L.kind) {
-    case 'om': setOpenMeteoLayer(map, on, state.omVar || 'cloud_cover'); break;
-    case 'sat': rv.setSatellite(on); break;
+    case 'om': setOpenMeteoLayer(map, on, state.omVar || 'cloud_cover'); updateOmLegend(); break;
     case 'radar': rv.setRadar(on); if (!on) $('#radar-play') && ($('#radar-play').textContent = '▶'); break;
     case 'gibs': setGibs(map, on); break;
     case 'eumetsat': setEumetsat(map, on); break;

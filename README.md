@@ -1,4 +1,4 @@
-# OnlyStars — Dnipro meteo explorer
+# OnlyStars —  meteo explorer
 
 A pannable, map-first weather explorer for **astrophotography and landscape
 photography around Dnipro, Ukraine**. Drop a pin anywhere and read a detailed
@@ -21,15 +21,14 @@ Static front-end + a couple of tiny serverless proxies. No build step.
 | Feature | Source | Key? | Notes |
 |---|---|---|---|
 | Point forecast (cloud lo/mid/hi, precip, CAPE, LI, CIN, visibility, freezing level, wind) | Open-Meteo, `models=icon_eu` | no | CORS-open, client-side |
-| Model field overlay | Open-Meteo `om://` map tiles | no | **beta** upstream; auto-disables if unavailable |
-| Satellite IR (default ON) | RainViewer | no | reliable over Ukraine |
+| Model field overlay | Open-Meteo `om://` map tiles | no | cloud / precip / temp; coarse global ICON |
 | Radar + nowcast frames | RainViewer | no | **no live UA radar** — EU context |
 | Daily true-colour | NASA GIBS (VIIRS) | no | one composite/day |
-| Meteosat (optional) | EUMETSAT EUMETView WMS | no | layer name may need swapping |
-| Astro seeing / transparency | 7Timer! ASTRO | no | via `seventimer` function (http-only) |
+| Meteosat (near-real-time) | EUMETSAT EUMETView WMS | no | satellite cloud field |
+| Astro seeing / transparency | 7Timer! ASTRO | no | via Worker `/seventimer` (http-only) |
 | Sun/moon, twilight, golden hour | SunCalc | no | fully client-side |
 | Space weather (Kp, aurora prob) | NOAA SWPC | no | CORS-open |
-| Air quality (nearest station) | SaveEcoBot | no | via `saveecobot` function |
+| Air quality (nearest station) | SaveEcoBot | no | via Worker `/saveecobot` |
 | Live lightning | LightningMaps embed **or** Cloudflare relay | no | see `cloudflare-relay/` (no home server) |
 
 ## Run locally
@@ -51,7 +50,22 @@ netlify dev            # serves the site AND the functions at /.netlify/function
 Without the functions, everything else still works; the seeing and air-quality
 cards just show "unavailable".
 
-## Deploy to Netlify
+## Deploy to GitHub Pages
+
+GitHub Pages serves static files only — it can't run the 7Timer / air-quality
+proxies. Those (and the lightning relay) live on a **Cloudflare Worker** instead:
+
+1. Deploy the Worker once — see `cloudflare-relay/README.md` (≈3 min, free).
+2. In `js/config.js`, set `WORKER_ORIGIN` to your Worker URL
+   (e.g. `https://onlystars-lightning.<you>.workers.dev`). `PROXY.base` and the
+   lightning `relayUrl` are derived from it automatically.
+3. Push to GitHub and enable Pages (Settings → Pages → deploy from branch).
+   All asset paths are relative, so it works fine under `/<repo>/`.
+
+Everything else (Open-Meteo, CARTO, GIBS, EUMETSAT, RainViewer radar, SWPC,
+SunCalc) is called straight from the browser and needs no proxy.
+
+## Deploy to Netlify (alternative)
 
 No build, no framework. Two ways:
 
@@ -61,10 +75,7 @@ dir is `.` and functions live in `netlify/functions`.
 
 **B. Git (recommended)** —
 
-```bash
-git init && git add . && git commit -m "OnlyStars init"
 # push to GitHub/GitLab, then in Netlify: "Add new site" → "Import from Git"
-```
 
 Build command: leave empty. Publish directory: `.`. Functions directory is
 picked up from `netlify.toml`. That's it — the functions deploy automatically.
